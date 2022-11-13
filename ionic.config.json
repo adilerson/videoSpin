@@ -1,0 +1,7 @@
+{
+  "name": "videospin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
