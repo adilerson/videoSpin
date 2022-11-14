@@ -88,9 +88,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-content class="ion-padding">
-        <div
-
-        >
+        <div>
           <ion-list>
             <ion-item>
               <ion-label>Config. Tempo</ion-label>
@@ -115,7 +113,24 @@
               </ion-select>
             </ion-item>
 
-            <ion-item >
+
+            <ion-item>
+              <ion-label>Entrada de Video</ion-label>
+              <ion-select
+                placeholder="Video"
+                id="Video"
+
+              >
+                <ion-select-option
+                (change)='selectVideoSource($event)'
+                  [value]="video"
+                  *ngFor="let video  of videoDevices"
+                  >{{video.label}}</ion-select-option
+                >
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
               <ion-label>Config. Câmera</ion-label>
               <ion-select placeholder="Câmera" id="camera" [(ngModel)]="camera">
                 <ion-select-option value="environment"

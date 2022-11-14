@@ -82,7 +82,7 @@
 
           <hr />
 
-          <ion-item>
+       <!--    <ion-item>
             <ion-label>Posição da câmera</ion-label>
             <ion-select
               placeholder="Câmera"
@@ -103,7 +103,7 @@
             *ngIf="isSubmitted && errorControl.nome.errors?.required"
           >
             A câmera é obrigatória.
-          </span>
+          </span> -->
           <hr />
 
           <ion-item>
@@ -127,6 +127,20 @@
           </ion-item>
 
           <hr />
+
+          <ion-item>
+            <ion-label>Entrada de Video</ion-label>
+            <ion-select
+            placeholder="Video"
+            id="Video"
+            formControlName="videoInput"
+            required
+          >
+            <ion-select-option [value]="video" *ngFor="let video  of videoDevices"
+              >{{video.label}}</ion-select-option
+            >
+          </ion-select>
+          </ion-item>
 
           <ion-item>
             <ion-label

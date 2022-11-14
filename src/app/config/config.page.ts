@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 import { HttpService } from './../services/http.service';
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/member-ordering */
@@ -36,6 +37,8 @@ export class ConfigPage implements OnInit {
   apiUrl = '';
 
   result: string;
+
+  videoDevices = [];
   constructor(
     private storage: StorageService,
     private formBuilder: FormBuilder,
@@ -54,6 +57,8 @@ export class ConfigPage implements OnInit {
       frameName: [''],
       audioName: [''],
       data: [''],
+      videoInput: [''],
+
     });
 
     this.eventos = this.storage.get('eventos') || [];
@@ -71,6 +76,8 @@ export class ConfigPage implements OnInit {
       console.log(new Date().toISOString());
       this.errorControl.data.setValue(new Date().toISOString());
     }, 1000);
+
+    console.log(this.getDevices());
   }
   get errorControl() {
     return this.configForm.controls;
@@ -222,6 +229,21 @@ export class ConfigPage implements OnInit {
         this.storage.set('apiUrl', res.data.values[0]);
         EventService.get('apiUrl').emit(res.data.values[0]);
       }
+    });
+  }
+
+  getDevices() {
+    this.videoDevices = [];
+    // AFAICT in Safari this only gets default devices until gUM is called :/
+    return navigator.mediaDevices.enumerateDevices().then((res) => {
+      res.forEach((element) => {
+        console.log(element);
+
+        if (element.kind === 'videoinput') {
+          this.videoDevices.push(element)
+        }
+      });
+      return res;
     });
   }
 }

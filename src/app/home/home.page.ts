@@ -51,6 +51,7 @@ export class HomePage implements OnInit, AfterViewInit {
   subscription: Subscription = new Subscription();
   eventoDetails: { name: string; audio: string; frame: string };
   segundosDisplay: string;
+  videoDevices: any[];
 
   constructor(
     public videoService: VideoService,
@@ -77,6 +78,8 @@ export class HomePage implements OnInit, AfterViewInit {
             audio: config.audioName,
             frame: config.frameName,
           };
+
+          this.getDevices()
         }
       }
     );
@@ -123,6 +126,9 @@ export class HomePage implements OnInit, AfterViewInit {
         */
         //user
         //environment
+        deviceId: this.evento.videoInput.deviceId
+          ? { exact: this.evento.videoInput.deviceId }
+          : undefined,
       },
 
       audio: false,
@@ -209,7 +215,7 @@ export class HomePage implements OnInit, AfterViewInit {
       track.stop();
     });
     this.counter = 0;
-    this.mediaRecorder.stop();
+    //this.mediaRecorder.stop();
     this.mediaRecorder = null;
     this.captureElement.nativeElement.srcObject = null;
     this.isRecording = false;
@@ -252,5 +258,26 @@ export class HomePage implements OnInit, AfterViewInit {
 
   cancel() {
     this.modal.dismiss(null, 'cancel');
+  }
+
+
+  getDevices() {
+    this.videoDevices = [];
+    // AFAICT in Safari this only gets default devices until gUM is called :/
+    return navigator.mediaDevices.enumerateDevices().then((res) => {
+      res.forEach((element) => {
+        console.log(element);
+
+        if (element.kind === 'videoinput') {
+          this.videoDevices.push(element)
+        }
+      });
+      return res;
+    });
+  }
+
+
+  selectVideoSource(event){
+    console.log(event)
   }
 }
