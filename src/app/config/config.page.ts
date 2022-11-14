@@ -43,7 +43,7 @@ export class ConfigPage implements OnInit {
     private alertController: AlertController,
     private eventoService: EventoSharedService,
     private router: Router,
-    public http:HttpService
+    public http: HttpService
   ) {}
 
   ngOnInit() {
@@ -218,8 +218,7 @@ export class ConfigPage implements OnInit {
 
     alert.onWillDismiss().then((res) => {
       if (res.data?.values[0]) {
-
-        this.apiUrl =res.data.values[0]
+        this.apiUrl = res.data.values[0];
         this.storage.set('apiUrl', res.data.values[0]);
         EventService.get('apiUrl').emit(res.data.values[0]);
       }
