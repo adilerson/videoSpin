@@ -7,6 +7,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { LoadingController } from '@ionic/angular';
 //import { createFFmpeg, fetchFile, FFmpeg } from '@ffmpeg/ffmpeg';
 
 @Injectable({
@@ -16,22 +17,13 @@ export class VideoService {
   public videos = [];
   private VIDEOS_KEY: string = 'videos';
 
-  //ffmpeg: FFmpeg;
   isReady = false;
   gifUrlData: string;
-  constructor() {
-    //this.loadFF();
+  constructor(private loadingCtrl: LoadingController) {
+
   }
 
-/*   async loadFF() {
-    this.ffmpeg = createFFmpeg({ log: true,
-      mainName: 'main',
-      //corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js',
-    });
-    await this.ffmpeg.load();
-    // Flag que indica que está pronto.
-    this.isReady = true;
-  } */
+
 
   async loadVideos() {
     const videoList = await Preferences.get({ key: this.VIDEOS_KEY });

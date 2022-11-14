@@ -4,55 +4,80 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular';
+import { EventService } from './event.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpService {
+ public url = 'http://localhost:3000';
   constructor(
     private http: HttpClient,
     private loadingController: LoadingController,
     private toastController: ToastController
-  ) {}
+  ) {
+    EventService.get('apiUrl').subscribe((data) => {
+      console.log('get url'+data)
+      this.url = data;
+    });
+  }
 
-  async sendVideo(formData: FormData) {
-    /*
+  async showLoading() {
     const loading = await this.loadingController.create({
       message: 'Aguarde, processando...',
     });
-    */
 
-    //await loading.present();
+    loading.present();
+  }
 
-    this.http
-      .post('https://192.168.31.199:3000/media', formData,{ responseType: 'arraybuffer'})
+  async sendVideo(formData: FormData) {
+    this.showLoading();
 
-      .subscribe(async (res) => {
-        //loading.dismiss();
-        this.downLoadFile(res, 'video/mp4');
-        console.log(res);
-        if (res['success']) {
+    await this.http
+      .post(`${this.url}/media`, formData, {
+        responseType: 'arraybuffer',
+      })
+      .subscribe(
+        async (res) => {
+          this.loadingController.dismiss();
+          // this.downLoadFile(res, 'video/mp4');
+          console.log(res);
+          if (res) {
+            const toast = await this.toastController.create({
+              message: 'success',
+              duration: 1500,
+              position: 'bottom',
+              color:'success'
+            });
+
+            await toast.present();
+          } else {
+            const toast = await this.toastController.create({
+              message: 'Error:',
+              duration: 1500,
+              position: 'bottom',
+              color:'danger'
+            });
+
+            await toast.present();
+          }
+        },
+        async (err) => {
+          this.loadingController.dismiss();
           const toast = await this.toastController.create({
-            message: 'success',
-            duration: 1500,
+            message: 'Error:' + err.message,
+            duration: 3000,
             position: 'bottom',
-          });
-
-          await toast.present();
-        } else {
-          const toast = await this.toastController.create({
-            message: 'Error',
-            duration: 1500,
-            position: 'bottom',
+            color:'danger'
           });
 
           await toast.present();
         }
-      });
+      );
   }
 
   downLoadFile(data: any, type: string) {
-    let blob = new Blob([data], { type: type});
+    let blob = new Blob([data], { type: type });
     let url = window.URL.createObjectURL(blob);
     /*let pwa = window.open(url);
     if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {

@@ -1,0 +1,160 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Evento </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="configUrltAlert()">
+        <ion-icon name="options-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button id="open-modal">
+      <ion-icon name="add"></ion-icon> </ion-fab-button
+  ></ion-fab>
+
+  <h1 class="ion-padding">Eventos Cadastrados</h1>
+
+  <ng-container *ngFor="let evento of eventos; let i = index">
+    <ion-item (click)="eventoActionSheet(evento,i)" button>
+      <ion-label>
+        <h3>{{evento.nome}}</h3>
+        <p>{{evento.data |date:'dd/MM/YYYY HH:mm'}}</p>
+      </ion-label>
+    </ion-item>
+  </ng-container>
+
+  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancelar</ion-button>
+          </ion-buttons>
+          <ion-title>Evento</ion-title>
+          <ion-buttons slot="end">
+            <ion-button
+              (click)="salvaEvento(configForm.value)"
+              [strong]="true"
+              [disabled]="!configForm.valid"
+              >Salvar</ion-button
+            >
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <h1 class="ion-padding">Configuração do Evento</h1>
+
+        <form [formGroup]="configForm">
+          <ion-item>
+            <ion-label position="stacked">Nome do Evento</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Evento"
+              formControlName="nome"
+              required
+            ></ion-input>
+          </ion-item>
+          <span
+            class="error"
+            *ngIf="isSubmitted && errorControl.nome.errors?.required"
+          >
+            O nome é obrigatório.
+          </span>
+          <hr />
+          <ion-item>
+            <ion-label>Tempo de gravação</ion-label>
+            <ion-select
+              placeholder="Tempo de gravação"
+              formControlName="tempo"
+              required
+            >
+              <ion-select-option value="5">5 segundos</ion-select-option>
+
+              <ion-select-option value="7" selected
+                >7 segundos</ion-select-option
+              >
+              <ion-select-option value="10">10 segundos</ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <hr />
+
+          <ion-item>
+            <ion-label>Posição da câmera</ion-label>
+            <ion-select
+              placeholder="Câmera"
+              id="camera"
+              formControlName="camera"
+              required
+            >
+              <ion-select-option value="environment"
+                >Traseira</ion-select-option
+              >
+              <ion-select-option value="user" selected
+                >Frontal</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+          <span
+            class="error"
+            *ngIf="isSubmitted && errorControl.nome.errors?.required"
+          >
+            A câmera é obrigatória.
+          </span>
+          <hr />
+
+          <ion-item>
+            <ion-label position="stacked">Nome da imagem do Frame</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Frame"
+              formControlName="frameName"
+            ></ion-input>
+          </ion-item>
+
+          <hr />
+
+          <ion-item>
+            <ion-label position="stacked">Nome do audio do evento</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Audio"
+              formControlName="audioName"
+            ></ion-input>
+          </ion-item>
+
+          <hr />
+
+          <ion-item>
+            <ion-label
+              >Data do Evento
+              <ion-datetime-button
+                datetime="datetime"
+                mode="ios"
+                class="ion-padding"
+              ></ion-datetime-button>
+
+              <ion-modal [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime
+                    id="datetime"
+                    prefer-wheel="”true”"
+                    formControlName="data"
+                  ></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </ion-label>
+          </ion-item>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <p *ngIf="http.url">Servidor: {{http.url}}</p>
+  </ion-toolbar>
+</ion-footer>

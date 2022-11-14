@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/semi */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable prefer-const */
@@ -14,7 +15,10 @@ import { CapacitorVideoPlayer } from 'capacitor-video-player';
 import { VideoService } from '../services/video.service';
 import * as WebVPPlugin from 'capacitor-video-player';
 import { HttpService } from '../services/http.service';
-import { UrlSerializer } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { EventoSharedService } from '../services/evento-shared.service';
+import { Router } from '@angular/router';
+import { IonModal } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -23,29 +27,60 @@ import { UrlSerializer } from '@angular/router';
 })
 export class HomePage implements OnInit, AfterViewInit {
   @ViewChild('video') captureElement: ElementRef;
+  @ViewChild(IonModal) modal: IonModal;
+
   mediaRecorder: any;
   videoPlayer: any;
   isRecording = false;
   videos = [];
   counter: number = 0;
   interval: any;
-  camera:string='user';
-  efeito:number=0;
-  segundos:number=7000;
+  camera: string = 'user';
+  efeito: number = 0;
+  segundos: number = 7000;
 
-delay:number=6
+  delay: number = 6;
 
   isReady = false;
   intervalDelay: any;
+  showCamera: boolean = false;
+  stream: MediaStream;
+
+  evento: any;
+
+  subscription: Subscription = new Subscription();
+  eventoDetails: { name: string; audio: string; frame: string };
+  segundosDisplay: string;
 
   constructor(
     public videoService: VideoService,
     private changeDetector: ChangeDetectorRef,
     private http: HttpService,
-
+    private eventoService: EventoSharedService,
+    private router: Router
   ) {}
 
-  async ngOnInit() {}
+  async ngOnInit() {
+    this.subscription = this.eventoService.currentConfig.subscribe(
+      (config: any) => {
+        console.log(config);
+        console.log(JSON.stringify(config));
+        if (JSON.stringify(config) === undefined) {
+          this.router.navigate(['config']);
+        } else {
+          this.evento = config;
+
+          this.camera = this.evento.camera;
+          this.segundos = this.evento.tempo * 1000;
+          this.eventoDetails = {
+            name: config.nome,
+            audio: config.audioName,
+            frame: config.frameName,
+          };
+        }
+      }
+    );
+  }
 
   async ngAfterViewInit() {
     this.videos = await this.videoService.loadVideos();
@@ -58,45 +93,26 @@ delay:number=6
     }
   }
 
-  async delayRecord(){
-    this.intervalDelay = setInterval(() => {
-      this.delay--
-      if ( this.delay == 0) {
-        console.log(this.delay)
-        clearInterval(this.intervalDelay);
-        this.recordVideo();
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
 
-        this.delay = 6;
-
-
-
-      }
-    }, 1000);
-
-
+    if (this.stream) {
+      this.stream.getTracks().forEach((track) => {
+        track.stop();
+      });
+    }
   }
 
-  async recordVideo() {
+  changeSegundos(value: any) {
+    console.log(value);
+  }
 
-
-    this.isRecording = true;
-
-    /*
-    function escreve(){
-      console.log('teste');
-    }
-    for (var i = 0; i < 100; i++) {
-      setInterval(escreve, 1000);
-    }
-    */
-
-
-
-
+  async startVideo() {
+    console.log(this.segundos);
+    this.showCamera = true;
+    this.changeDetector.detectChanges();
     // Create a stream of video capturing
-    const stream = await navigator.mediaDevices.getUserMedia({
-
-
+    this.stream = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: this.camera,
         width: { ideal: 1080 },
@@ -113,18 +129,42 @@ delay:number=6
     });
 
     // Show the stream inside our video object
-    this.captureElement.nativeElement.srcObject = stream;
+    this.captureElement.nativeElement.srcObject = this.stream;
 
     const options = { mimeType: 'video/webm' };
-    this.mediaRecorder = new MediaRecorder(stream, options);
+    this.mediaRecorder = new MediaRecorder(this.stream, options);
+    this.changeDetector.detectChanges();
+  }
+  async delayRecord() {
+    console.log('delay in');
+    this.changeDetector.detectChanges();
+    this.intervalDelay = setInterval(() => {
+      this.changeDetector.detectChanges();
+      this.delay--;
+      if (this.delay === 0) {
+        console.log(this.delay);
+        clearInterval(this.intervalDelay);
+        this.recordVideo();
+
+        this.delay = 6;
+      }
+    }, 1000);
+  }
+
+  async recordVideo() {
+    this.isRecording = true;
+
     let chunks = [];
+
+    this.changeDetector.detectChanges();
 
     this.interval = setInterval(() => {
       this.counter++;
+      this.changeDetector.detectChanges();
     }, 1000);
 
     setTimeout(() => {
-      this.stopRecord()
+      this.stopRecord();
     }, this.segundos);
     // Store the video on stop
     this.mediaRecorder.onstop = async (event) => {
@@ -132,10 +172,20 @@ delay:number=6
       const fileName = new Date().getTime() + '.mp4';
       await this.videoService.storeVideo(videoBuffer);
       const formData = new FormData();
+
+      formData.append('evento', JSON.stringify(this.eventoDetails));
+
       formData.append('file', videoBuffer, fileName);
 
-      this.http.sendVideo(formData);
+      formData.forEach((res) => {
+        console.log(res);
+      });
 
+      this.http.sendVideo(formData);
+      this.mediaRecorder = null;
+      this.showCamera = false;
+      this.stream = null;
+      this.captureElement.nativeElement.srcObject = null;
       // Reload our list
       this.videos = this.videoService.videos;
       this.changeDetector.detectChanges();
@@ -155,6 +205,9 @@ delay:number=6
 
   stopRecord() {
     clearInterval(this.interval);
+    this.stream.getTracks().forEach((track) => {
+      track.stop();
+    });
     this.counter = 0;
     this.mediaRecorder.stop();
     this.mediaRecorder = null;
@@ -165,27 +218,15 @@ delay:number=6
   async sendVideo(video) {
     const realUrl = await this.videoService.getVideoUrl(video);
     const fileName = new Date().getTime() + '.mp4';
-    const imgFilename = new Date().getTime() + '.png';
 
     const videoBuffer = await this.videoService.DataURIToBlob(realUrl);
-    const imgBuffer = await fetch('assets/back.png').then((response) =>
-      response.blob()
-    );
-
-    const audioBuffer = await fetch('assets/audio.mp3').then((response) =>
-    response.blob()
-  );
-
-    const img64: any = await this.videoService.blobToBase64(imgBuffer);
-    const audio64: any = await this.videoService.blobToBase64(audioBuffer);
-
 
     const formData = new FormData();
 
     formData.append('file', videoBuffer, fileName);
 
-   // formData.append('imagem', img64);
-   // formData.append('mp3', audio64.tostring());
+    // formData.append('imagem', img64);
+    // formData.append('mp3', audio64.tostring());
     // formData.append('image',imgBuffer,imgFilename)
 
     this.http.sendVideo(formData);
@@ -195,7 +236,6 @@ delay:number=6
   async blobToGif(video) {
     const realUrl = await this.videoService.getVideoUrl(video);
     const videoBuffer = await this.videoService.DataURIToBlob(realUrl);
-    this.videoService.blobToGif(videoBuffer);
   }
   async play(video) {
     // Get the video as base64 data
@@ -208,5 +248,9 @@ delay:number=6
       playerId: 'fullscreen',
       componentTag: 'app-home',
     });
+  }
+
+  cancel() {
+    this.modal.dismiss(null, 'cancel');
   }
 }

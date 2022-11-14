@@ -1,19 +1,42 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title style="text-align: center;">
-      CG Stories 360.
-    </ion-title>
+    <ion-buttons slot="start" *ngIf="!isRecording">
+      <ion-back-button text="Voltar"></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end" *ngIf="!isRecording">
+      <ion-button id="open-modal-config">
+        <ion-icon name="cog-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title style="text-align: center"> CG 360 ({{evento.nome}}) </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-
-  <ion-chip style="z-index: 999;font-size:5rem; background-color: none;" class="icon"  [hidden]="!isRecording">{{counter}}</ion-chip>
+  <ion-chip
+    style="z-index: 999; font-size: 5rem; background-color: none"
+    class="icon"
+    [hidden]="!isRecording"
+    >{{counter}}</ion-chip
+  >
   <!-- Display the video stream while capturing -->
-  <video class="video" #video autoplay playsinline muted [hidden]="!isRecording"></video>
+  <video
+    class="video"
+    #video
+    autoplay
+    playsinline
+    muted
+    [hidden]="!showCamera"
+    width="100%"
+    height="100%"
+  ></video>
 
-
-  <ion-chip style="z-index: 999;font-size:5rem; background-color: none;" class="icon"  [hidden]="delay==6">{{delay}}</ion-chip>
+  <ion-chip
+    style="z-index: 999; font-size: 5rem; background-color: none"
+    class="icon"
+    [hidden]="delay===6"
+    >{{delay}}</ion-chip
+  >
 
   <!-- Neccessary for the video player -->
   <div id="fullscreen" slot="fixed"></div>
@@ -29,45 +52,92 @@
   </ion-list>
   -->
 
-  <ion-fab vertical="center" horizontal="center" slot="fixed" style="zoom:2" [hidden]="isRecording" *ngIf='delay==6'>
+  <ion-fab
+    vertical="center"
+    horizontal="center"
+    slot="fixed"
+    style="zoom: 2"
+    [hidden]="isRecording"
+    *ngIf="delay === 6 && showCamera === false"
+  >
+    <ion-fab-button color="new" (click)="startVideo()">
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab
+    vertical="center"
+    horizontal="center"
+    slot="fixed"
+    style="zoom: 2"
+    [hidden]="isRecording"
+    *ngIf="delay === 6 && showCamera === true"
+  >
     <ion-fab-button (click)="isRecording ? stopRecord() : delayRecord()">
       <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <ion-modal trigger="open-modal-config">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Fechar</ion-button>
+          </ion-buttons>
+          <ion-title>Configuração</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div
+
+        >
+          <ion-list>
+            <ion-item>
+              <ion-label>Config. Tempo</ion-label>
+              <ion-select
+                placeholder="Tempo"
+                id="segundos"
+                [(ngModel)]="segundos"
+              >
+                <ion-select-option value="10000">10 seg</ion-select-option>
+                <ion-select-option value="7000">7 seg</ion-select-option>
+                <ion-select-option value="5000">5 seg</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label>Config. Efeitos</ion-label>
+              <ion-select placeholder="Efeito" id="efeito" [(ngModel)]="efeito">
+                <ion-select-option value="0">Mix</ion-select-option>
+                <ion-select-option value="1">Boomerang</ion-select-option>
+                <ion-select-option value="2">SlowMotion</ion-select-option>
+                <ion-select-option value="3">Nenhum</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item >
+              <ion-label>Config. Câmera</ion-label>
+              <ion-select placeholder="Câmera" id="camera" [(ngModel)]="camera">
+                <ion-select-option value="environment"
+                  >Traseira</ion-select-option
+                >
+                <ion-select-option value="user" selected
+                  >Frontal</ion-select-option
+                >
+              </ion-select>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
 
-<div vertical="center" class="footer" style="display:flex; justify-content: space-around;">
-
-
-
-  <ion-list>
-    <ion-item style="font-size:1.5rem; width: 8.5rem;">
-      <ion-select placeholder="Tempo" id="segundos" [(ngModel)]='segundos'>
-        <ion-select-option value="10000">10 seg</ion-select-option>
-        <ion-select-option value="7000" selected>7 seg</ion-select-option>
-        <ion-select-option value="5000">5 seg</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
-
-  <ion-list>
-    <ion-item style="font-size:1.5rem; width: 8.5rem;" >
-      <ion-select placeholder="Efeito" id="efeito" [(ngModel)]='efeito'>
-        <ion-select-option value="0">Mix</ion-select-option>
-        <ion-select-option value="1">Boomerang</ion-select-option>
-        <ion-select-option value="2">SlowMotion</ion-select-option>
-        <ion-select-option value="3">Nenhum</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
-
-  <ion-list>
-    <ion-item style="font-size:1.5rem; width: 8.5rem;" >
-      <ion-select placeholder="Câmera" id="camera" [(ngModel)]='camera'>
-        <ion-select-option value="environment">Traseira</ion-select-option>
-        <ion-select-option value="user" selected>Frontal</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
-
-</div>
+<ion-footer>
+  <ion-toolbar>
+    <ion-label>
+      <p>Duração : {{evento.tempo}} seg</p>
+      <p>Câmera : {{evento.camera}}</p>
+    </ion-label>
+  </ion-toolbar>
+</ion-footer>
