@@ -79,7 +79,7 @@ export class HomePage implements OnInit, AfterViewInit {
             frame: config.frameName,
           };
 
-          this.getDevices()
+          this.getDevices();
         }
       }
     );
@@ -117,7 +117,7 @@ export class HomePage implements OnInit, AfterViewInit {
     // Create a stream of video capturing
     this.stream = await navigator.mediaDevices.getUserMedia({
       video: {
-       // facingMode: this.camera,
+        // facingMode: this.camera,
         width: { ideal: 1080 },
         height: { ideal: 720 },
         /*
@@ -260,24 +260,24 @@ export class HomePage implements OnInit, AfterViewInit {
     this.modal.dismiss(null, 'cancel');
   }
 
-
   getDevices() {
     this.videoDevices = [];
-    // AFAICT in Safari this only gets default devices until gUM is called :/
-    return navigator.mediaDevices.enumerateDevices().then((res) => {
+
+
+    navigator.mediaDevices.enumerateDevices().then((res) => {
       res.forEach((element) => {
         console.log(element);
 
         if (element.kind === 'videoinput') {
-          this.videoDevices.push(element)
+          this.videoDevices.push(element);
         }
       });
-      return res;
     });
+
+    // AFAICT in Safari this only gets default devices until gUM is called :/
   }
 
-
-  selectVideoSource(event){
-    console.log(event)
+  selectVideoSource(event) {
+    console.log(event);
   }
 }

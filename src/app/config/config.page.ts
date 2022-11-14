@@ -57,7 +57,6 @@ export class ConfigPage implements OnInit {
       audioName: [''],
       data: [''],
       videoInput: ['', Validators.required],
-
     });
 
     this.eventos = this.storage.get('eventos') || [];
@@ -234,15 +233,23 @@ export class ConfigPage implements OnInit {
   getDevices() {
     this.videoDevices = [];
     // AFAICT in Safari this only gets default devices until gUM is called :/
-    return navigator.mediaDevices.enumerateDevices().then((res) => {
-      res.forEach((element) => {
-        console.log(element);
+    navigator.mediaDevices
+      .getUserMedia({
+        video: {
+          width: { ideal: 1080 },
+          height: { ideal: 720 },
+        },
+      })
+      .then(() => {
+        navigator.mediaDevices.enumerateDevices().then((res) => {
+          res.forEach((element) => {
+            console.log(element);
 
-        if (element.kind === 'videoinput') {
-          this.videoDevices.push(element)
-        }
+            if (element.kind === 'videoinput') {
+              this.videoDevices.push(element);
+            }
+          });
+        });
       });
-      return res;
-    });
   }
 }
