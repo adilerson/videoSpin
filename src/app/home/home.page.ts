@@ -71,7 +71,7 @@ export class HomePage implements OnInit, AfterViewInit {
         } else {
           this.evento = config;
 
-          this.camera = this.evento.camera;
+          //this.camera = this.evento.camera;
           this.segundos = this.evento.tempo * 1000;
           this.eventoDetails = {
             name: config.nome,
@@ -117,7 +117,7 @@ export class HomePage implements OnInit, AfterViewInit {
     // Create a stream of video capturing
     this.stream = await navigator.mediaDevices.getUserMedia({
       video: {
-        facingMode: this.camera,
+       // facingMode: this.camera,
         width: { ideal: 1080 },
         height: { ideal: 720 },
         /*
@@ -127,7 +127,7 @@ export class HomePage implements OnInit, AfterViewInit {
         //user
         //environment
         deviceId: this.evento.videoInput.deviceId
-          ? { exact: this.evento.videoInput.deviceId }
+          ? this.evento.videoInput.deviceId
           : undefined,
       },
 

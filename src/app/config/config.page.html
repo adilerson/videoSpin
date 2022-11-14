@@ -136,8 +136,8 @@
             formControlName="videoInput"
             required
           >
-            <ion-select-option [value]="video" *ngFor="let video  of videoDevices"
-              >{{video.label}}</ion-select-option
+            <ion-select-option [value]="video" *ngFor="let video  of videoDevices; let i = index"
+              >{{video.label?video.label:"Default Video "+i}}</ion-select-option
             >
           </ion-select>
           </ion-item>

@@ -53,11 +53,10 @@ export class ConfigPage implements OnInit {
     this.configForm = this.formBuilder.group({
       nome: ['', Validators.required],
       tempo: ['7', Validators.required],
-      camera: ['user', Validators.required],
       frameName: [''],
       audioName: [''],
       data: [''],
-      videoInput: [''],
+      videoInput: ['', Validators.required],
 
     });
 
