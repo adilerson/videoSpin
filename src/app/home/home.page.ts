@@ -264,7 +264,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.videoDevices = [];
 
 
-    navigator.mediaDevices.enumerateDevices().then((res) => {
+    const stream =navigator.mediaDevices.enumerateDevices().then((res) => {
       res.forEach((element) => {
         console.log(element);
 
@@ -273,6 +273,8 @@ export class HomePage implements OnInit, AfterViewInit {
         }
       });
     });
+
+
 
     // AFAICT in Safari this only gets default devices until gUM is called :/
   }

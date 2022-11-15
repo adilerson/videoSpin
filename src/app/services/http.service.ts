@@ -39,7 +39,11 @@ export class HttpService {
       })
       .subscribe(
         async (res) => {
-          this.loadingController.dismiss();
+
+          setTimeout(() => {
+            this.loadingController.dismiss();
+          }, 300);
+
           // this.downLoadFile(res, 'video/mp4');
           console.log(res);
           if (res) {
@@ -63,7 +67,9 @@ export class HttpService {
           }
         },
         async (err) => {
-          this.loadingController.dismiss();
+          setTimeout(() => {
+            this.loadingController.dismiss();
+          }, 300);
           const toast = await this.toastController.create({
             message: 'Error:' + err.message,
             duration: 3000,

@@ -240,7 +240,7 @@ export class ConfigPage implements OnInit {
           height: { ideal: 720 },
         },
       })
-      .then(() => {
+      .then((stream) => {
         navigator.mediaDevices.enumerateDevices().then((res) => {
           res.forEach((element) => {
             console.log(element);
@@ -250,6 +250,12 @@ export class ConfigPage implements OnInit {
             }
           });
         });
+
+        setTimeout(() => {
+          stream.getTracks().forEach((track) => {
+            track.stop();
+          });
+        }, 200);
       });
   }
 }
