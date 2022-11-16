@@ -1,18 +1,24 @@
-<ion-header>6
+<ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start" *ngIf="!isRecording">
-      <ion-back-button text="Voltar"></ion-back-button>
-    </ion-buttons>
-    <ion-buttons slot="end" *ngIf="!isRecording">
-      <ion-button id="open-modal-config">
-        <ion-icon name="cog-outline"></ion-icon>
+    <ion-buttons slot="start" >
+      <ion-button *ngIf="!showCamera" (click)="navBack()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
       </ion-button>
+
+    </ion-buttons>
+    <ion-buttons slot="end" >
+ <!--      <ion-button id="open-modal-config" *ngIf="!showCamera">
+        <ion-icon name="cog-outline"></ion-icon>
+      </ion-button> -->
     </ion-buttons>
     <ion-title style="text-align: center"> CG 360 ({{evento.nome}}) </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+
+
   <ion-chip
     style="z-index: 999; font-size: 5rem; background-color: none"
     class="icon"
@@ -64,6 +70,9 @@
       <ion-icon name="checkmark-circle-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+  <ng-container >
+
+  </ng-container>
   <ion-fab
     vertical="center"
     horizontal="center"
@@ -72,7 +81,7 @@
     [hidden]="isRecording"
     *ngIf="delay === 6 && showCamera === true"
   >
-    <ion-fab-button (click)="isRecording ? stopRecord() : delayRecord()">
+    <ion-fab-button (click)="isRecording ? stopRecord() : delayRecord()" *ngIf="!delayStarted">
       <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -114,7 +123,7 @@
             </ion-item>
 
 
-            <ion-item>
+          <!--   <ion-item>
               <ion-label>Entrada de Video</ion-label>
               <ion-select
                 placeholder="Video"
@@ -140,7 +149,7 @@
                   >Frontal</ion-select-option
                 >
               </ion-select>
-            </ion-item>
+            </ion-item> -->
           </ion-list>
         </div>
       </ion-content>
@@ -152,7 +161,7 @@
   <ion-toolbar>
     <ion-label>
       <p>Duração : {{evento.tempo}} seg</p>
-      <p>Câmera : {{evento.camera}}</p>
+      <p>Câmera : {{evento.videoInput.label}}</p>
     </ion-label>
   </ion-toolbar>
 </ion-footer>

@@ -1,3 +1,5 @@
+import { ToastController } from '@ionic/angular';
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/semi */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
@@ -15,10 +17,12 @@ import { CapacitorVideoPlayer } from 'capacitor-video-player';
 import { VideoService } from '../services/video.service';
 import * as WebVPPlugin from 'capacitor-video-player';
 import { HttpService } from '../services/http.service';
-import { Subscription } from 'rxjs';
+import { async, Subscription } from 'rxjs';
 import { EventoSharedService } from '../services/evento-shared.service';
 import { Router } from '@angular/router';
 import { IonModal } from '@ionic/angular';
+import { StorageService } from '../services/storage.service';
+import { EventService } from '../services/event.service';
 
 @Component({
   selector: 'app-home',
@@ -52,25 +56,47 @@ export class HomePage implements OnInit, AfterViewInit {
   eventoDetails: { name: string; audio: string; frame: string };
   segundosDisplay: string;
   videoDevices: any[];
+  apiUrl: any;
+  delayStarted = false;
 
   constructor(
     public videoService: VideoService,
     private changeDetector: ChangeDetectorRef,
     private http: HttpService,
     private eventoService: EventoSharedService,
-    private router: Router
+    private router: Router,
+    private storage: StorageService,
+    private toastController: ToastController
   ) {}
 
   async ngOnInit() {
+    const _event = this.storage.get('selectedEvento') || null;
+
     this.subscription = this.eventoService.currentConfig.subscribe(
-      (config: any) => {
+      async (config: any) => {
         console.log(config);
         console.log(JSON.stringify(config));
-        if (JSON.stringify(config) === undefined) {
-          this.router.navigate(['config']);
+        if (JSON.stringify(config)== null) {
+          if (_event) {
+            this.apiUrl = this.storage.get('apiUrl') || '';
+            this.evento = _event;
+
+            this.eventoDetails = {
+              name: _event.nome,
+              audio: _event.audioName,
+              frame: _event.frameName,
+            };
+            if (this.apiUrl.length) {
+              EventService.get('apiUrl').emit(this.apiUrl);
+            }
+            console.log(_event);
+          } else {
+            this.router.navigate(['config']);
+          }
         } else {
           this.evento = config;
-
+          console.log(config);
+          this.storage.set('selectedEvento', config);
           //this.camera = this.evento.camera;
           this.segundos = this.evento.tempo * 1000;
           this.eventoDetails = {
@@ -78,8 +104,6 @@ export class HomePage implements OnInit, AfterViewInit {
             audio: config.audioName,
             frame: config.frameName,
           };
-
-          this.getDevices();
         }
       }
     );
@@ -141,7 +165,9 @@ export class HomePage implements OnInit, AfterViewInit {
     this.mediaRecorder = new MediaRecorder(this.stream, options);
     this.changeDetector.detectChanges();
   }
+
   async delayRecord() {
+    this.delayStarted = true;
     console.log('delay in');
     this.changeDetector.detectChanges();
     this.intervalDelay = setInterval(() => {
@@ -158,6 +184,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   async recordVideo() {
+    this.delayStarted = false;
     this.isRecording = true;
 
     let chunks = [];
@@ -260,26 +287,15 @@ export class HomePage implements OnInit, AfterViewInit {
     this.modal.dismiss(null, 'cancel');
   }
 
-  getDevices() {
-    this.videoDevices = [];
-
-
-    const stream =navigator.mediaDevices.enumerateDevices().then((res) => {
-      res.forEach((element) => {
-        console.log(element);
-
-        if (element.kind === 'videoinput') {
-          this.videoDevices.push(element);
-        }
-      });
-    });
-
-
-
-    // AFAICT in Safari this only gets default devices until gUM is called :/
-  }
-
   selectVideoSource(event) {
     console.log(event);
+  }
+
+  navBack() {
+    if (this.stream) {
+      this.stopRecord();
+    }
+
+    this.router.navigate(['config']);
   }
 }
