@@ -246,6 +246,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.mediaRecorder = null;
     this.captureElement.nativeElement.srcObject = null;
     this.isRecording = false;
+    this.changeDetector.detectChanges();
   }
 
   async sendVideo(video) {
