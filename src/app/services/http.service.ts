@@ -10,7 +10,7 @@ import { EventService } from './event.service';
   providedIn: 'root',
 })
 export class HttpService {
- public url = 'http://localhost:3000';
+ public url = 'https://192.168.31.199:3000';
   constructor(
     private http: HttpClient,
     private loadingController: LoadingController,
