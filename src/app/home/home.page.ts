@@ -145,9 +145,9 @@ export class HomePage implements OnInit, AfterViewInit {
       .iterations(Infinity)
       .fromTo('opacity', '1', '0.5')
       .keyframes([
-        { offset: 0, transform:'scale(1) ', opacity: '1'},
+        { offset: 0, transform:'scale(0.2) ', opacity: '0.2' },
         { offset: 0.7, transform:'scale(0.5) ', opacity: '0.5' },
-        { offset: 1, transform:'scale(0.2) ', opacity: '0.2' },
+        { offset: 1, transform:'scale(1) ', opacity: '1'}
       ]);
 
     animation.play();
