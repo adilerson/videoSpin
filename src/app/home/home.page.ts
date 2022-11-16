@@ -1,4 +1,4 @@
-import { ToastController } from '@ionic/angular';
+import { AnimationController, ToastController } from '@ionic/angular';
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @angular-eslint/use-lifecycle-interface */
 /* eslint-disable @typescript-eslint/semi */
@@ -32,6 +32,8 @@ import { EventService } from '../services/event.service';
 export class HomePage implements OnInit, AfterViewInit {
   @ViewChild('video') captureElement: ElementRef;
   @ViewChild(IonModal) modal: IonModal;
+  @ViewChild('delayEffect', { read: ElementRef, static: true })
+  delayEffect: ElementRef;
 
   mediaRecorder: any;
   videoPlayer: any;
@@ -66,7 +68,8 @@ export class HomePage implements OnInit, AfterViewInit {
     private eventoService: EventoSharedService,
     private router: Router,
     private storage: StorageService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private animationCtrl: AnimationController
   ) {}
 
   async ngOnInit() {
@@ -76,7 +79,7 @@ export class HomePage implements OnInit, AfterViewInit {
       async (config: any) => {
         console.log(config);
         console.log(JSON.stringify(config));
-        if (JSON.stringify(config)== null) {
+        if (JSON.stringify(config) == null) {
           if (_event) {
             this.apiUrl = this.storage.get('apiUrl') || '';
             this.evento = _event;
@@ -134,6 +137,22 @@ export class HomePage implements OnInit, AfterViewInit {
     console.log(value);
   }
 
+  public pulse() {
+    const animation = this.animationCtrl
+      .create()
+      .addElement(this.delayEffect.nativeElement)
+      .duration(1000)
+      .iterations(Infinity)
+      .fromTo('opacity', '1', '0.5')
+      .keyframes([
+        { offset: 0, transform:'scale(1) ', opacity: '1'},
+        { offset: 0.7, transform:'scale(0.5) ', opacity: '0.5' },
+        { offset: 1, transform:'scale(0.2) ', opacity: '0.2' },
+      ]);
+
+    animation.play();
+  }
+
   async startVideo() {
     console.log(this.segundos);
     this.showCamera = true;
@@ -167,6 +186,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   async delayRecord() {
+    this.pulse();
     this.delayStarted = true;
     console.log('delay in');
     this.changeDetector.detectChanges();

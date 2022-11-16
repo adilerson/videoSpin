@@ -4,20 +4,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoadingController, ToastController } from '@ionic/angular';
+import { serverIP } from 'src/environments/environment';
 import { EventService } from './event.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpService {
- public url = 'http://localhost:3000';
+ public url = serverIP;
   constructor(
     private http: HttpClient,
     private loadingController: LoadingController,
     private toastController: ToastController
   ) {
     EventService.get('apiUrl').subscribe((data) => {
-      console.log('get url'+data)
+      console.log('get url'+data);
       this.url = data;
     });
   }
