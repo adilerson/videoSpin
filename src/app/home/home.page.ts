@@ -101,7 +101,7 @@ export class HomePage implements OnInit, AfterViewInit {
           console.log(config);
           this.storage.set('selectedEvento', config);
           //this.camera = this.evento.camera;
-          this.segundos = this.evento.tempo * 1000;
+          this.segundos = this.evento.tempo * 1000 +1000;
           this.eventoDetails = {
             name: config.nome,
             audio: config.audioName,
