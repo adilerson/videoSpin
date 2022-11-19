@@ -6,15 +6,18 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
+
+  {
+    path: 'config',
+    loadChildren: () => import('./config/config.module').then( m => m.ConfigPageModule)
+  },
   {
     path: '',
     redirectTo: 'config',
     pathMatch: 'full'
   },
-  {
-    path: 'config',
-    loadChildren: () => import('./config/config.module').then( m => m.ConfigPageModule)
-  },
+  {path: '404',   redirectTo: 'config'},
+  {path: '**', redirectTo: '/404'}
 
 ];
 
