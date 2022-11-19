@@ -67,22 +67,43 @@
           <ion-item>
             <ion-label>Tempo de gravação</ion-label>
             <ion-select
+              #tempoGrav
               placeholder="Tempo de gravação"
               formControlName="tempo"
               required
             >
               <ion-select-option value="5">5 segundos</ion-select-option>
 
-              <ion-select-option value="7" selected
-                >7 segundos</ion-select-option
+              <ion-select-option value="10" selected
+                >10 segundos</ion-select-option
               >
-              <ion-select-option value="10">10 segundos</ion-select-option>
+              <ion-select-option value="12">12 segundos</ion-select-option>
             </ion-select>
+          </ion-item>
+          <hr />
+          <h4>Tempo dos efeitos</h4>
+
+          <ion-item>
+            <ion-label>Tempo velocidade normal: </ion-label>
+            <ion-input type="number" style="text-align: right"
+            formControlName="vNormal"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Tempo velocidade fast: </ion-label>
+            <ion-input type="number" style="text-align: right"
+            formControlName="vFast"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Tempo velocidade slow: </ion-label>
+            <ion-input type="number" style="text-align: right"
+            formControlName="vSlow"></ion-input>
           </ion-item>
 
           <hr />
 
-       <!--    <ion-item>
+          <!--    <ion-item>
             <ion-label>Posição da câmera</ion-label>
             <ion-select
               placeholder="Câmera"
@@ -104,7 +125,7 @@
           >
             A câmera é obrigatória.
           </span> -->
-          <hr />
+          <!--     <hr />
 
           <ion-item>
             <ion-label position="stacked">Nome da imagem do Frame</ion-label>
@@ -124,22 +145,25 @@
               placeholder="Audio"
               formControlName="audioName"
             ></ion-input>
-          </ion-item>
+          </ion-item> -->
 
           <hr />
 
           <ion-item>
             <ion-label>Entrada de Video</ion-label>
             <ion-select
-            placeholder="Video"
-            id="Video"
-            formControlName="videoInput"
-            required
-          >
-            <ion-select-option [value]="video" *ngFor="let video  of videoDevices; let i = index"
-              >{{video.label?video.label:"Default Video "+i}}</ion-select-option
+              placeholder="Video"
+              id="Video"
+              formControlName="videoInput"
+              required
             >
-          </ion-select>
+              <ion-select-option
+                [value]="video"
+                *ngFor="let video  of videoDevices; let i = index"
+                >{{video.label?video.label:"Default Video
+                "+i}}</ion-select-option
+              >
+            </ion-select>
           </ion-item>
 
           <ion-item>

@@ -55,7 +55,14 @@ export class HomePage implements OnInit, AfterViewInit {
   evento: any;
 
   subscription: Subscription = new Subscription();
-  eventoDetails: { name: string; audio: string; frame: string };
+  eventoDetails: {
+    name: string;
+    audio: string;
+    frame: string;
+    vNormal: string;
+    vFast: string;
+    vSlow: string;
+  };
   segundosDisplay: string;
   videoDevices: any[];
   apiUrl: any;
@@ -85,10 +92,14 @@ export class HomePage implements OnInit, AfterViewInit {
             this.evento = _event;
 
             this.eventoDetails = {
-              name: _event.nome,
+              name: _event.nome.replace(/[^A-Z0-9]+/gi, '_'),
               audio: _event.audioName,
               frame: _event.frameName,
+              vNormal: _event.vNormal,
+              vFast: _event.vFast,
+              vSlow: _event.vSlow,
             };
+            this.segundos = this.evento.tempo * 1000;
             if (this.apiUrl.length) {
               EventService.get('apiUrl').emit(this.apiUrl);
             }
@@ -101,11 +112,14 @@ export class HomePage implements OnInit, AfterViewInit {
           console.log(config);
           this.storage.set('selectedEvento', config);
           //this.camera = this.evento.camera;
-          this.segundos = this.evento.tempo * 1000 +1000;
+          this.segundos = this.evento.tempo * 1000;
           this.eventoDetails = {
-            name: config.nome,
+            name: _event.nome.replace(/[^A-Z0-9]+/gi, '_'),
             audio: config.audioName,
             frame: config.frameName,
+            vNormal: config.vNormal,
+            vFast: config.vFast,
+            vSlow: config.vSlow,
           };
         }
       }
@@ -125,7 +139,8 @@ export class HomePage implements OnInit, AfterViewInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-
+    this.eventoDetails = null;
+    this.storage.remove('selectedEvento');
     if (this.stream) {
       this.stream.getTracks().forEach((track) => {
         track.stop();
@@ -145,9 +160,9 @@ export class HomePage implements OnInit, AfterViewInit {
       .iterations(Infinity)
       .fromTo('opacity', '1', '0.5')
       .keyframes([
-        { offset: 0, transform:'scale(0.2) ', opacity: '0.2' },
-        { offset: 0.7, transform:'scale(0.5) ', opacity: '0.5' },
-        { offset: 1, transform:'scale(1) ', opacity: '1'}
+        { offset: 0, transform: 'scale(0.2) ', opacity: '0.2' },
+        { offset: 0.7, transform: 'scale(0.5) ', opacity: '0.5' },
+        { offset: 1, transform: 'scale(1) ', opacity: '1' },
       ]);
 
     animation.play();

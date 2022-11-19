@@ -10,6 +10,7 @@ import {
   AlertController,
   IonDatetime,
   IonModal,
+  ToastController,
 } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core';
 import { EventService } from '../services/event.service';
@@ -45,6 +46,7 @@ export class ConfigPage implements OnInit {
     private actionSheetCtrl: ActionSheetController,
     private alertController: AlertController,
     private eventoService: EventoSharedService,
+    private toastController: ToastController,
     private router: Router,
     public http: HttpService
   ) {}
@@ -53,10 +55,13 @@ export class ConfigPage implements OnInit {
     this.configForm = this.formBuilder.group({
       nome: ['', Validators.required],
       tempo: ['7', Validators.required],
-      frameName: [''],
-      audioName: [''],
+      // frameName: [''],
+      //  audioName: [''],
       data: [''],
       videoInput: ['', Validators.required],
+      vNormal: ['', Validators.required],
+      vSlow: ['', Validators.required],
+      vFast: ['', Validators.required],
     });
 
     this.eventos = this.storage.get('eventos') || [];
@@ -96,7 +101,24 @@ export class ConfigPage implements OnInit {
     }
   }
 
-  salvaEvento(config: NgForm) {
+  async salvaEvento(config: any) {
+    const totalTempo = config.vNormal + config.vFast + config.vSlow;
+    const tempo: any = config.tempo;
+    console.log(tempo);
+    if (totalTempo !== parseFloat(tempo)) {
+      const toast = await this.toastController.create({
+        message:
+          'O tempo dos efeitos não podem ser maior nem menor que o tempo de gravação',
+        duration: 3000,
+        position: 'bottom',
+        color: 'danger',
+      });
+
+      await toast.present();
+
+      return;
+    }
+
     this.isSubmitted = true;
     console.log(config);
     this.eventos.push(config);
@@ -109,6 +131,7 @@ export class ConfigPage implements OnInit {
   async eventoActionSheet(evento: any, index: any) {
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Opções do Evento',
+      mode:'ios',
       subHeader: evento.nome,
       buttons: [
         {
@@ -176,6 +199,10 @@ export class ConfigPage implements OnInit {
 
   async guardaEventos() {
     this.storage.set('eventos', this.eventos);
+
+    setTimeout(() => {
+      this.eventos = this.storage.get('eventos') || [];
+    }, 100);
   }
 
   setConfig(config) {
@@ -245,7 +272,7 @@ export class ConfigPage implements OnInit {
           res.forEach((element) => {
             console.log(element);
 
-            if (element.kind === 'videoinput') {
+            if (element.kind === 'videoinput' && element.deviceId) {
               this.videoDevices.push(element);
             }
           });
