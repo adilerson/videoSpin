@@ -20,7 +20,7 @@
 
 
   <ion-chip
-    style="z-index: 999; font-size: 5rem; background: none"
+    style="z-index: 999; font-size: 7rem; background: none"
     class="icon"
     [hidden]="!isRecording"
     >{{counter}}</ion-chip
@@ -38,9 +38,9 @@
   ></video>
 
   <ion-chip
-    style="z-index: 999; font-size: 5rem; background: none"
+    style="z-index: 999; font-size: 7rem; background: none"
     class="icon"
-    [hidden]="delay===6"
+    [hidden]="delay===8"
     #delayEffect
     >{{delay}}</ion-chip
   >
@@ -65,7 +65,7 @@
     slot="fixed"
     style="zoom: 2"
     [hidden]="isRecording"
-    *ngIf="delay === 6 && showCamera === false"
+    *ngIf="delay === 8 && showCamera === false"
   >
     <ion-fab-button color="new" (click)="startVideo()">
       <ion-icon name="checkmark-circle-outline"></ion-icon>
@@ -80,7 +80,7 @@
     slot="fixed"
     style="zoom: 2"
     [hidden]="isRecording"
-    *ngIf="delay === 6 && showCamera === true"
+    *ngIf="delay === 8 && showCamera === true"
   >
     <ion-fab-button (click)="isRecording ? stopRecord() : delayRecord()" *ngIf="!delayStarted">
       <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>

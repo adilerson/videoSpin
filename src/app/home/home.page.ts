@@ -43,9 +43,9 @@ export class HomePage implements OnInit, AfterViewInit {
   interval: any;
   camera: string = 'user';
   efeito: number = 0;
-  segundos: number = 7000;
+  segundos: number = 12000;
 
-  delay: number = 6;
+  delay: number = 8;
 
   isReady = false;
   intervalDelay: any;
@@ -142,19 +142,35 @@ export class HomePage implements OnInit, AfterViewInit {
       .create()
       .addElement(this.delayEffect.nativeElement)
       .duration(1000)
+      .fromTo('opacity', '1', '0')
       .iterations(Infinity)
-      .fromTo('opacity', '1', '0.5')
       .keyframes([
-        { offset: 0, transform:'scale(1) ', opacity: '1'},
-        { offset: 0.7, transform:'scale(0.5) ', opacity: '0.5' },
-        { offset: 1, transform:'scale(0.2) ', opacity: '0.2' },
+        { offset: 0, transform:'scale(1.5) ', opacity: '0', filter: 'blur(3px)'},
+        { offset: 0.5, transform:'scale(0.85) ', opacity: '0.75', filter: 'blur(1px)'},
+        { offset: 1, transform:'scale(0.4) ', opacity: '1', filter: 'blur(0)'},
+      ]);
+
+    animation.play();
+  }
+
+  public pulseRecord() {
+    const animation = this.animationCtrl
+      .create()
+      .addElement(this.delayEffect.nativeElement)
+      .duration(1000)
+      .fromTo('opacity', '1', '0')
+      .iterations(Infinity)
+      .keyframes([
+        { offset: 0, transform:'scale(1.5) ', opacity: '0', filter: 'blur(3px)'},
+        { offset: 0.5, transform:'scale(0.85) ', opacity: '0.75', filter: 'blur(1px)'},
+        { offset: 1, transform:'scale(0.4) ', opacity: '1', filter: 'blur(0)'},
       ]);
 
     animation.play();
   }
 
   async startVideo() {
-    console.log(this.segundos);
+    //console.log(this.segundos);
     this.showCamera = true;
     this.changeDetector.detectChanges();
     // Create a stream of video capturing
@@ -198,12 +214,13 @@ export class HomePage implements OnInit, AfterViewInit {
         clearInterval(this.intervalDelay);
         this.recordVideo();
 
-        this.delay = 6;
+        this.delay = 8;
       }
     }, 1000);
   }
 
   async recordVideo() {
+
     this.delayStarted = false;
     this.isRecording = true;
 
@@ -213,6 +230,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     this.interval = setInterval(() => {
       this.counter++;
+      this.pulseRecord();
       this.changeDetector.detectChanges();
     }, 1000);
 
@@ -221,7 +239,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }, this.segundos);
     // Store the video on stop
     this.mediaRecorder.onstop = async (event) => {
-      const videoBuffer = new Blob(chunks, { type: 'video/webm' });
+      const videoBuffer = new Blob(chunks, { type: 'video/mp4' });
       const fileName = new Date().getTime() + '.mp4';
       await this.videoService.storeVideo(videoBuffer);
       const formData = new FormData();
