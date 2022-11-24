@@ -62,6 +62,7 @@ export class ConfigPage implements OnInit {
       vNormal: ['', Validators.required],
       vSlow: ['', Validators.required],
       vFast: ['', Validators.required],
+      position:['']
     });
 
     this.eventos = this.storage.get('eventos') || [];

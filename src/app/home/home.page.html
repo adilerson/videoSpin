@@ -22,12 +22,13 @@
   <ion-chip
 
     style="z-index: 999; font-size: 7rem; background: none"
-
+    [hidden]="!isRecording"
     class="icon"
     #recordEffect
-    [hidden]="!isRecording"
+    [ngClass]="position === 'top'?'position-top':position === 'center'?'position-center':'position-bottom'"
     >{{counter}}</ion-chip
   >
+   <!--  -->
   <!-- Display the video stream while capturing -->
   <video
     class="video"
@@ -40,11 +41,14 @@
     height="100%"
   ></video>
 
+  <!--  [style.color]="position === 'top'?'red':'white'" alterar status de color das letras-->
+
   <ion-chip
     style="z-index: 999; font-size: 7rem; background: none"
 
     class="icon"
     [hidden]="delay===8"
+    [ngClass]="position === 'top'?'position-top':position === 'center'?'position-center':'position-bottom'"
     #delayEffect
     >{{delay}}</ion-chip
   >
@@ -64,7 +68,7 @@
   -->
 
   <ion-fab
-    vertical="top"
+    [vertical]="position"
     horizontal="center"
     slot="fixed"
     style="zoom: 2"
@@ -79,16 +83,17 @@
 
   </ng-container>
   <ion-fab
-    vertical="top"
+    [vertical]="position"
     horizontal="center"
     slot="fixed"
     style="zoom: 2;"
-    
+
     id="contagem"
     [hidden]="isRecording"
     *ngIf="delay === 8 && showCamera === true"
   >
-    <ion-fab-button (click)="isRecording ? stopRecord() : delayRecord()" *ngIf="!delayStarted">
+    <ion-fab-button (click)="isRecording ? stopRecord() : delayRecord()" *ngIf="!delayStarted"
+    >
       <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
     </ion-fab-button>
   </ion-fab>
