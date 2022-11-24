@@ -114,7 +114,7 @@ export class HomePage implements OnInit, AfterViewInit {
           //this.camera = this.evento.camera;
           this.segundos = this.evento.tempo * 1000;
           this.eventoDetails = {
-            name: _event.nome.replace(/[^A-Z0-9]+/gi, '_'),
+            name: config.nome.replace(/[^A-Z0-9]+/gi, '_'),
             audio: config.audioName,
             frame: config.frameName,
             vNormal: config.vNormal,
@@ -160,8 +160,8 @@ export class HomePage implements OnInit, AfterViewInit {
       .fromTo('opacity', '1', '0')
       .iterations(Infinity)
       .keyframes([
-        { offset: 0, transform:'scale(1.5) ', opacity: '0', filter: 'blur(3px)'},
-        { offset: 0.5, transform:'scale(0.85) ', opacity: '0.75', filter: 'blur(1px)'},
+        { offset: 0, transform:'scale(1.5) ', opacity: '0', filter: 'blur(10px)'},
+        { offset: 0.5, transform:'scale(0.85) ', opacity: '0.75', filter: 'blur(5px)'},
         { offset: 1, transform:'scale(0.4) ', opacity: '1', filter: 'blur(0)'},
       ]);
 
@@ -176,8 +176,8 @@ export class HomePage implements OnInit, AfterViewInit {
       .fromTo('opacity', '1', '0')
       .iterations(Infinity)
       .keyframes([
-        { offset: 0, transform:'scale(1.5) ', opacity: '0', filter: 'blur(3px)'},
-        { offset: 0.5, transform:'scale(0.85) ', opacity: '0.75', filter: 'blur(1px)'},
+        { offset: 0, transform:'scale(1.5) ', opacity: '0', filter: 'blur(10px)'},
+        { offset: 0.5, transform:'scale(0.85) ', opacity: '0.75', filter: 'blur(5px)'},
         { offset: 1, transform:'scale(0.4) ', opacity: '1', filter: 'blur(0)'},
 
       ]);
@@ -220,13 +220,13 @@ export class HomePage implements OnInit, AfterViewInit {
   async delayRecord() {
     this.pulse();
     this.delayStarted = true;
-    console.log('delay in');
+    //console.log('delay in');
     this.changeDetector.detectChanges();
     this.intervalDelay = setInterval(() => {
       this.changeDetector.detectChanges();
       this.delay--;
       if (this.delay === 0) {
-        console.log(this.delay);
+        //console.log(this.delay);
         clearInterval(this.intervalDelay);
         this.recordVideo();
 

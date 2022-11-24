@@ -20,7 +20,9 @@
 
 
   <ion-chip
+
     style="z-index: 999; font-size: 7rem; background: none"
+
     class="icon"
     [hidden]="!isRecording"
     >{{counter}}</ion-chip
@@ -39,6 +41,7 @@
 
   <ion-chip
     style="z-index: 999; font-size: 7rem; background: none"
+
     class="icon"
     [hidden]="delay===8"
     #delayEffect
@@ -60,7 +63,7 @@
   -->
 
   <ion-fab
-    vertical="center"
+    vertical="top"
     horizontal="center"
     slot="fixed"
     style="zoom: 2"
@@ -75,10 +78,12 @@
 
   </ng-container>
   <ion-fab
-    vertical="center"
+    vertical="top"
     horizontal="center"
     slot="fixed"
-    style="zoom: 2"
+    style="zoom: 2;"
+    
+    id="contagem"
     [hidden]="isRecording"
     *ngIf="delay === 8 && showCamera === true"
   >
