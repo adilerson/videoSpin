@@ -34,6 +34,8 @@ export class HomePage implements OnInit, AfterViewInit {
   @ViewChild(IonModal) modal: IonModal;
   @ViewChild('delayEffect', { read: ElementRef, static: true })
   delayEffect: ElementRef;
+  @ViewChild('recordEffect', { read: ElementRef, static: true })
+  recordEffect: ElementRef;
 
   mediaRecorder: any;
   videoPlayer: any;
@@ -171,7 +173,7 @@ export class HomePage implements OnInit, AfterViewInit {
   public pulseRecord() {
     const animation = this.animationCtrl
       .create()
-      .addElement(this.delayEffect.nativeElement)
+      .addElement(this.recordEffect.nativeElement)
       .duration(1000)
       .fromTo('opacity', '1', '0')
       .iterations(Infinity)
