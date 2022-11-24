@@ -230,6 +230,7 @@ export class HomePage implements OnInit, AfterViewInit {
       if (this.delay === 0) {
         //console.log(this.delay);
         clearInterval(this.intervalDelay);
+        this.http.startGiraGira();
         this.recordVideo();
 
         this.delay = 8;
@@ -238,6 +239,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   async recordVideo() {
+
 
     this.delayStarted = false;
     this.isRecording = true;
@@ -269,6 +271,8 @@ export class HomePage implements OnInit, AfterViewInit {
       formData.forEach((res) => {
         console.log(res);
       });
+
+      this.http.stopGiraGira();
 
       this.http.sendVideo(formData);
       this.mediaRecorder = null;
