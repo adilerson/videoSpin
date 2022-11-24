@@ -1,3 +1,4 @@
+import { async } from 'rxjs';
 /* eslint-disable object-shorthand */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/dot-notation */
@@ -11,14 +12,17 @@ import { EventService } from './event.service';
   providedIn: 'root',
 })
 export class HttpService {
- public url = serverIP;
+  public url = serverIP;
+
+  public rodaApi = 'http://192.168.31.199:8080';
+
   constructor(
     private http: HttpClient,
     private loadingController: LoadingController,
     private toastController: ToastController
   ) {
     EventService.get('apiUrl').subscribe((data) => {
-      console.log('get url'+data);
+      console.log('get url' + data);
       this.url = data;
     });
   }
@@ -31,6 +35,39 @@ export class HttpService {
     loading.present();
   }
 
+  async startGiraGira() {
+    await this.http
+      .post(`${this.rodaApi}/serial.php?status=1`, { status: 'start' })
+      .subscribe(async (res) => {
+        console.log(res);
+        const toast = await this.toastController.create({
+          message: 'success',
+          duration: 1500,
+          position: 'bottom',
+          color: 'success',
+        });
+
+        await toast.present();
+      });
+  }
+
+  async stopGiraGira() {
+    await this.http
+      .post(`${this.rodaApi}/serial.php?status=0`, { status: 'stop' })
+      .subscribe(async (res) => {
+        console.log(res);
+        const toast = await this.toastController.create({
+          message: 'success',
+          duration: 1500,
+          position: 'bottom',
+          color: 'success',
+        });
+
+        await toast.present();
+      });
+  }
+
+
   async sendVideo(formData: FormData) {
     this.showLoading();
 
@@ -40,7 +77,6 @@ export class HttpService {
       })
       .subscribe(
         async (res) => {
-
           setTimeout(() => {
             this.loadingController.dismiss();
           }, 300);
@@ -52,7 +88,7 @@ export class HttpService {
               message: 'success',
               duration: 1500,
               position: 'bottom',
-              color:'success'
+              color: 'success',
             });
 
             await toast.present();
@@ -61,7 +97,7 @@ export class HttpService {
               message: 'Error:',
               duration: 1500,
               position: 'bottom',
-              color:'danger'
+              color: 'danger',
             });
 
             await toast.present();
@@ -75,7 +111,7 @@ export class HttpService {
             message: 'Error:' + err.message,
             duration: 3000,
             position: 'bottom',
-            color:'danger'
+            color: 'danger',
           });
 
           await toast.present();
