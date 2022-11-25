@@ -89,6 +89,9 @@ export class HomePage implements OnInit, AfterViewInit {
         console.log(config);
         console.log(JSON.stringify(config));
         if (JSON.stringify(config) == null) {
+
+          console.log('localStorage')
+          console.log(_event)
           if (_event) {
             this.apiUrl = this.storage.get('apiUrl') || '';
             this.evento = _event;
