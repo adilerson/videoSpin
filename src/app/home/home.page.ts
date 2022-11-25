@@ -41,7 +41,7 @@ export class HomePage implements OnInit, AfterViewInit {
   videoPlayer: any;
   isRecording = false;
   videos = [];
-  counter: number = 0;
+  counter: number = 1;
   interval: any;
   camera: string = 'user';
   efeito: number = 0;
@@ -225,22 +225,35 @@ export class HomePage implements OnInit, AfterViewInit {
     //console.log('delay in');
     this.changeDetector.detectChanges();
     this.intervalDelay = setInterval(() => {
-      this.changeDetector.detectChanges();
+
       this.delay--;
-      if (this.delay === 0) {
+
+
+      if (this.delay === 1) {
         //console.log(this.delay);
-        clearInterval(this.intervalDelay);
-        this.http.startGiraGira();
+
         this.recordVideo();
 
         this.delay = 8;
       }
+      if (this.delay == 2) {
+   this.startGiraGira()
+      }
+
+ //console.log('delay in');
+    this.changeDetector.detectChanges();
     }, 1000);
+
+
+  }
+
+  async startGiraGira(){
+    this.http.startGiraGira();
   }
 
   async recordVideo() {
 
-
+    clearInterval(this.intervalDelay);
     this.delayStarted = false;
     this.isRecording = true;
 
@@ -250,7 +263,6 @@ export class HomePage implements OnInit, AfterViewInit {
 
     this.interval = setInterval(() => {
       this.counter++;
-      this.pulseRecord();
       this.changeDetector.detectChanges();
     }, 1000);
 
@@ -272,7 +284,7 @@ export class HomePage implements OnInit, AfterViewInit {
         console.log(res);
       });
 
-      this.http.stopGiraGira();
+
 
       this.http.sendVideo(formData);
       this.mediaRecorder = null;
@@ -282,6 +294,10 @@ export class HomePage implements OnInit, AfterViewInit {
       // Reload our list
       this.videos = this.videoService.videos;
       this.changeDetector.detectChanges();
+
+      setTimeout(() => {
+        this.http.stopGiraGira();
+      }, 1000);
     };
 
     // Store chunks of recorded video
@@ -301,7 +317,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.stream.getTracks().forEach((track) => {
       track.stop();
     });
-    this.counter = 0;
+    this.counter = 1;
     //this.mediaRecorder.stop();
     this.mediaRecorder = null;
     this.captureElement.nativeElement.srcObject = null;

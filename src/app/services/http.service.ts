@@ -14,7 +14,7 @@ import { EventService } from './event.service';
 export class HttpService {
   public url = serverIP;
 
-  public rodaApi = 'http://192.168.31.199:8080';
+  public rodaApi = 'https://192.168.31.199:443';
 
   constructor(
     private http: HttpClient,
@@ -37,7 +37,7 @@ export class HttpService {
 
   async startGiraGira() {
     await this.http
-      .post(`${this.rodaApi}/serial.php?status=1`, { status: 'start' })
+      .get(`${this.rodaApi}/serial.php?com=4&status=1`)
       .subscribe(async (res) => {
         console.log(res);
         const toast = await this.toastController.create({
@@ -53,7 +53,7 @@ export class HttpService {
 
   async stopGiraGira() {
     await this.http
-      .post(`${this.rodaApi}/serial.php?status=0`, { status: 'stop' })
+      .get(`${this.rodaApi}/serial.php?com=4&status=0`)
       .subscribe(async (res) => {
         console.log(res);
         const toast = await this.toastController.create({
