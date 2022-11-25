@@ -69,7 +69,7 @@ export class HomePage implements OnInit, AfterViewInit {
   videoDevices: any[];
   apiUrl: any;
   delayStarted = false;
-
+  position = 'top';
   constructor(
     public videoService: VideoService,
     private changeDetector: ChangeDetectorRef,
@@ -92,6 +92,7 @@ export class HomePage implements OnInit, AfterViewInit {
           if (_event) {
             this.apiUrl = this.storage.get('apiUrl') || '';
             this.evento = _event;
+            this.position =_event.position? _event.position:'center';
 
             this.eventoDetails = {
               name: _event.nome.replace(/[^A-Z0-9]+/gi, '_'),
@@ -113,6 +114,7 @@ export class HomePage implements OnInit, AfterViewInit {
           this.evento = config;
           console.log(config);
           this.storage.set('selectedEvento', config);
+          this.position =config.position? config.position:'center';
           //this.camera = this.evento.camera;
           this.segundos = this.evento.tempo * 1000;
           this.eventoDetails = {
@@ -162,9 +164,24 @@ export class HomePage implements OnInit, AfterViewInit {
       .fromTo('opacity', '1', '0')
       .iterations(Infinity)
       .keyframes([
-        { offset: 0, transform:'scale(1.5) ', opacity: '0', filter: 'blur(10px)'},
-        { offset: 0.5, transform:'scale(0.85) ', opacity: '0.75', filter: 'blur(5px)'},
-        { offset: 1, transform:'scale(0.4) ', opacity: '1', filter: 'blur(0)'},
+        {
+          offset: 0,
+          transform: 'scale(1.5) ',
+          opacity: '0',
+          filter: 'blur(10px)',
+        },
+        {
+          offset: 0.5,
+          transform: 'scale(0.85) ',
+          opacity: '0.75',
+          filter: 'blur(5px)',
+        },
+        {
+          offset: 1,
+          transform: 'scale(0.4) ',
+          opacity: '1',
+          filter: 'blur(0)',
+        },
       ]);
 
     animation.play();
@@ -178,10 +195,24 @@ export class HomePage implements OnInit, AfterViewInit {
       .fromTo('opacity', '1', '0')
       .iterations(Infinity)
       .keyframes([
-        { offset: 0, transform:'scale(1.5) ', opacity: '0', filter: 'blur(10px)'},
-        { offset: 0.5, transform:'scale(0.85) ', opacity: '0.75', filter: 'blur(5px)'},
-        { offset: 1, transform:'scale(0.4) ', opacity: '1', filter: 'blur(0)'},
-
+        {
+          offset: 0,
+          transform: 'scale(1.5) ',
+          opacity: '0',
+          filter: 'blur(10px)',
+        },
+        {
+          offset: 0.5,
+          transform: 'scale(0.85) ',
+          opacity: '0.75',
+          filter: 'blur(5px)',
+        },
+        {
+          offset: 1,
+          transform: 'scale(0.4) ',
+          opacity: '1',
+          filter: 'blur(0)',
+        },
       ]);
 
     animation.play();

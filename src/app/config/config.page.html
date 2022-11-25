@@ -86,20 +86,29 @@
 
           <ion-item>
             <ion-label>Tempo velocidade normal: </ion-label>
-            <ion-input type="number" style="text-align: right"
-            formControlName="vNormal"></ion-input>
+            <ion-input
+              type="number"
+              style="text-align: right"
+              formControlName="vNormal"
+            ></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label>Tempo velocidade fast: </ion-label>
-            <ion-input type="number" style="text-align: right"
-            formControlName="vFast"></ion-input>
+            <ion-input
+              type="number"
+              style="text-align: right"
+              formControlName="vFast"
+            ></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label>Tempo velocidade slow: </ion-label>
-            <ion-input type="number" style="text-align: right"
-            formControlName="vSlow"></ion-input>
+            <ion-input
+              type="number"
+              style="text-align: right"
+              formControlName="vSlow"
+            ></ion-input>
           </ion-item>
 
           <hr />
@@ -161,9 +170,24 @@
               <ion-select-option
                 [value]="video"
                 *ngFor="let video  of videoDevices; let i = index"
-                >{{video.label?video.label:"Default Video
-                "+i}}</ion-select-option
+                >{{video.label?video.label:'Default Video '+i}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Posição dos Avisos</ion-label>
+            <ion-select
+              #tempoGrav
+              formControlName="position"
+              required
+            >
+              <ion-select-option value="top">Top</ion-select-option>
+
+              <ion-select-option value="center" selected
+                >Center</ion-select-option
               >
+              <ion-select-option value="bottom">Bottom</ion-select-option>
             </ion-select>
           </ion-item>
 
