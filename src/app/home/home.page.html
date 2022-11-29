@@ -11,7 +11,7 @@
         <ion-icon name="cog-outline"></ion-icon>
       </ion-button> -->
     </ion-buttons>
-    <ion-title style="text-align: center"> CG 360 ({{evento.nome}}) </ion-title>
+    <ion-title style="text-align: center"> ({{evento.nome}}) </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -21,7 +21,7 @@
 
   <ion-chip
 
-    style="z-index: 999; font-size: 7rem; background: none"
+    style="z-index: 999; font-size: 7rem; background:none; margin-top: 2rem;"
     [hidden]="!isRecording"
     class="icon"
     #recordEffect
@@ -44,7 +44,7 @@
   <!--  [style.color]="position === 'top'?'red':'white'" alterar status de color das letras-->
 
   <ion-chip
-    style="z-index: 999; font-size: 7rem; background: none"
+    style="z-index: 999; font-size: 7rem; background: none; margin-top: 2.5rem;"
 
     class="icon"
     [hidden]="delay===8"
@@ -71,7 +71,7 @@
     [vertical]="position"
     horizontal="center"
     slot="fixed"
-    style="zoom: 2"
+    style="zoom: 2;"
     [hidden]="isRecording"
     *ngIf="delay === 8 && showCamera === false"
   >

@@ -86,12 +86,12 @@ export class HomePage implements OnInit, AfterViewInit {
 
     this.subscription = this.eventoService.currentConfig.subscribe(
       async (config: any) => {
-        console.log(config);
-        console.log(JSON.stringify(config));
+        //console.log(config);
+        //console.log(JSON.stringify(config));
         if (JSON.stringify(config) == null) {
 
-          console.log('localStorage')
-          console.log(_event)
+          //console.log('localStorage')
+          //console.log(_event)
           if (_event) {
             this.apiUrl = this.storage.get('apiUrl') || '';
             this.evento = _event;
@@ -109,13 +109,13 @@ export class HomePage implements OnInit, AfterViewInit {
             if (this.apiUrl.length) {
               EventService.get('apiUrl').emit(this.apiUrl);
             }
-            console.log(_event);
+            //console.log(_event);
           } else {
             this.router.navigate(['config']);
           }
         } else {
           this.evento = config;
-          console.log(config);
+          //console.log(config);
           this.storage.set('selectedEvento', config);
           this.position =config.position? config.position:'center';
           //this.camera = this.evento.camera;
@@ -156,7 +156,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   changeSegundos(value: any) {
-    console.log(value);
+    //console.log(value);
   }
 
   public pulse() {
@@ -263,7 +263,7 @@ export class HomePage implements OnInit, AfterViewInit {
       this.delay--;
 
 
-      if (this.delay === 1) {
+      if (this.delay === 0) {
         //console.log(this.delay);
 
         this.recordVideo();
@@ -271,7 +271,7 @@ export class HomePage implements OnInit, AfterViewInit {
         this.delay = 8;
       }
       if (this.delay == 2) {
-   this.startGiraGira()
+        this.startGiraGira()
       }
 
  //console.log('delay in');
@@ -287,6 +287,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
   async recordVideo() {
 
+    
     clearInterval(this.intervalDelay);
     this.delayStarted = false;
     this.isRecording = true;
@@ -294,6 +295,7 @@ export class HomePage implements OnInit, AfterViewInit {
     let chunks = [];
 
     this.changeDetector.detectChanges();
+    this.counter = 0;
 
     this.interval = setInterval(() => {
       this.counter++;
@@ -315,7 +317,7 @@ export class HomePage implements OnInit, AfterViewInit {
       formData.append('file', videoBuffer, fileName);
 
       formData.forEach((res) => {
-        console.log(res);
+        //console.log(res);
       });
 
 
@@ -374,7 +376,7 @@ export class HomePage implements OnInit, AfterViewInit {
     // formData.append('image',imgBuffer,imgFilename)
 
     this.http.sendVideo(formData);
-    console.log(formData);
+    //console.log(formData);
   }
 
   async blobToGif(video) {
@@ -399,7 +401,7 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   selectVideoSource(event) {
-    console.log(event);
+    //console.log(event);
   }
 
   navBack() {

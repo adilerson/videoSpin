@@ -37,7 +37,7 @@ export class HttpService {
 
   async startGiraGira() {
     await this.http
-      .get(`${this.rodaApi}/serial.php?com=4&status=1`)
+      .get(`${this.rodaApi}/serial.php?status=1`)
       .subscribe(async (res) => {
         console.log(res);
         const toast = await this.toastController.create({
@@ -53,7 +53,7 @@ export class HttpService {
 
   async stopGiraGira() {
     await this.http
-      .get(`${this.rodaApi}/serial.php?com=4&status=0`)
+      .get(`${this.rodaApi}/serial.php?status=0`)
       .subscribe(async (res) => {
         console.log(res);
         const toast = await this.toastController.create({
